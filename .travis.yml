@@ -9,18 +9,12 @@ matrix:
       dist: xenial          # required for Python >= 3.7
       install: 
         - pip3 install --upgrade pip
-        - pip install pytest
-        - pip install pytest-cov
-        - pip install coveralls 
     - name: "3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
       os: osx  
       osx_image: xcode10.2  # macOS 10.14
       language: shell       
       install: 
         - pip3 install --upgrade pip
-        - pip install pytest
-        - pip install pytest-cov
-        - pip install coveralls
     - name: "3.7.3 on Windows" # see https://docs.travis-ci.com/user/reference/windows/
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell      
@@ -28,9 +22,10 @@ matrix:
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
       install: 
         - pip3 install --upgrade pip  --user #user option needed on windows
-        - pip install pytest
-        - pip install pytest-cov
-        - pip install coveralls
+install:
+  - pip install pytest
+  - pip install pytest-cov
+  - pip install coveralls 
 # 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
 # 'python3' is a 'command not found' error on Windows 
 script: python3 src/app.py || python src/app.py
