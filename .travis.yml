@@ -23,9 +23,7 @@ matrix:
       install: 
         - pip3 install --upgrade pip  --user #user option needed on windows
 install:
-  - pip install pytest
-  - pip install pytest-cov
-  - pip install coveralls 
-# 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
-# 'python3' is a 'command not found' error on Windows 
-script: python3 src/app.py || python src/app.py
+  - pip install -r requirements.txt 
+  - pip install coveralls
+script: 
+  - pytest --cov=example
