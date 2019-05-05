@@ -1,24 +1,36 @@
-language: python            # this works for Linux but is an error on macOS or Windows
+language: python            # works only for linux
 python:
-- 3.6
 - 3.5
+- 3.6
 matrix:
   include:
-    - name: "Python 3.7.1 on Xenial Linux"
-      python: 3.7           # this works for Linux but is ignored on macOS or Windows
+    - name: "3.7.1 on Xenial Linux"
+      python: 3.7           # ignored on macOS or Windows
       dist: xenial          # required for Python >= 3.7
-      install: pip3 install --upgrade pip 
-    - name: "Python 3.7.2 on macOS"
-      os: osx
-      osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
-      language: shell       # 'language: python' is an error on Travis CI macOS
-      install: pip3 install --upgrade pip 
-    - name: "Python 3.7.3 on Windows"
+      install: 
+        - pip3 install --upgrade pip
+        - pip install pytest
+        - pip install pytest-cov
+        - pip install coveralls 
+    - name: "3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
+      os: osx  
+      osx_image: xcode10.2  # macOS 10.14
+      language: shell       
+      install: 
+        - pip3 install --upgrade pip
+        - pip install pytest
+        - pip install pytest-cov
+        - pip install coveralls
+    - name: "3.7.3 on Windows" # see https://docs.travis-ci.com/user/reference/windows/
       os: windows           # Windows 10.0.17134 N/A Build 17134
-      language: shell       # 'language: python' is an error on Travis CI Windows
-      before_install: choco install python 
+      language: shell      
+      before_install: choco install python # available packages https://chocolatey.org/packages?q=python
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-      install: pip3 install --upgrade pip  --user # all three OSes agree about 'pip3'
+      install: 
+        - pip3 install --upgrade pip  --user #user option needed on windows
+        - pip install pytest
+        - pip install pytest-cov
+        - pip install coveralls
 # 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
-# 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
+# 'python3' is a 'command not found' error on Windows 
 script: python3 src/app.py || python src/app.py
