@@ -1,35 +1,23 @@
 language: python            # works only for linux
+dist: xenial  
 python:
 - 3.5
 - 3.6
+- 3.7
 matrix:
   include:
-    - name: "3.7.1 on Xenial Linux"
-      python: 3.7           # ignored on macOS or Windows
-      dist: xenial          # required for Python >= 3.7
-      install: 
-        - pip3 install --upgrade pip
-        - pip install -r requirements.txt 
-        - pip install -r requirements_dev.txt
     - name: "3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
       os: osx  
       osx_image: xcode10.2  # macOS 10.14
       language: shell       
-      install: 
-        - pip3 install --upgrade pip
-        - pip install -r requirements.txt 
-        - pip install -r requirements_dev.txt
+      before_install: pip3 install --upgrade pip
     - name: "3.7.3 on Windows" # see https://docs.travis-ci.com/user/reference/windows/
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell      
-      before_install: choco install python # available packages https://chocolatey.org/packages?q=python
+      before_install: 
+        - choco install python # available packages https://chocolatey.org/packages?q=python
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-      install: 
-        - pip3 install --upgrade pip  --user #user option needed on windows
-        - pip install -r requirements.txt 
-        - pip install -r requirements_dev.txt
 install: 
   - pip install -r requirements.txt 
   - pip install -r requirements_dev.txt 
-script: python3 example/leaderboard.py || python  example/leaderboard.py
- # - pytest --cov=leaderboard
+script: pytest --cov=example
