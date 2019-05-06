@@ -25,7 +25,7 @@ def calculate_leaderboard(data):
     return leaderboard
 
 
-def write_data_frame(data, filepath, sheetname):
+def write_leaderboard(data, filepath, sheetname):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     writer = pd.ExcelWriter(filepath)
     data.to_excel(writer, sheetname)
@@ -34,6 +34,6 @@ def write_data_frame(data, filepath, sheetname):
 
 if __name__ == '__main__':
     leaderboard = calculate_leaderboard(results)
-    output_path = os.path.join("results2","leaderboard.xls")
-    write_data_frame(leaderboard, output_path, "Leaderboard")
+    output_path = os.path.join("results","leaderboard.xls")
+    write_leaderboard(leaderboard, output_path, "Leaderboard")
     print(leaderboard)
