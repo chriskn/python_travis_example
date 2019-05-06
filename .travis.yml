@@ -25,5 +25,5 @@ matrix:
 install:
   - pip install -r requirements.txt 
   - pip install coveralls
-script: 
-  - pytest --cov=example
+script: python leaderboard.py || python3 leaderboard.py
+ # - pytest --cov=leaderboard
