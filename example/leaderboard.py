@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import pandas as pd
 import numpy as np
@@ -6,13 +8,10 @@ import xlwt
 
 
 results = pd.DataFrame([
-    ['tom', 10],
-    ['nick', 15],
-    ['juli', 14],
     ['tom', 3],
-    ['nick', 15],
-    ['juli', 20],
-    ['peter', 20],
+    ['nick', 5],
+    ['juli', 19],
+    ['tom', 8],
     ['peter', 20]
 ], columns=['Name', 'Points'])
 
