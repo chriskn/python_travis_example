@@ -3,8 +3,9 @@
 
 import unittest
 
-import leaderboard
 import pandas as pd
+
+from example import leaderboard
 
 
 class TestLeaderboard(unittest.TestCase):

@@ -4,6 +4,10 @@ python:
 - 3.5
 - 3.6
 - 3.7
+#env:
+#  global:
+    # Doctr deploy key for chriskn/python_travis_example
+#    - secure: "VEvdYR3/6O9d1PeAllw1BchIhyZ0aNIqeLkga9+5f9Y6PAHdnaqTLee3HP8QHQu7ieufcE+YJsa55Ahumwh9w0gh4ybEQCrdz3a57+EajcScMwpQv2vEwNcaT/nYHAV5dN4zrS1mRsq0QmM5q3nkuswa3GtIWWp7i6RH2GfDe+Yl9pMIBwBVqMBR4CGXrUx2aujDSvQDsEqroZIK3eiFV02Iegbd9xyc9/XQl998BGqnDkYB2bU+okD0UnajW+FjQvILhPSsJG3/zj8NqN+54RZ4wLVKXEHVhaelD7rRvSEdGMGgWmU4BSDa25cTylRmc2GPqeJU2SHcJo4xu/cZ+x46bQrpHz29+700W9fnrKeEgHh6PrtIVKKn0/GwvVfEi4JtfKxoM0+6iyuuq/eM2hTMobo2pQZTzP4DEfzSXMrhnlXj1bSm0B9YhgApcF4zryK79F9Y7negMpgv2HGFxDbxlebS3IUdDde+WdMmgs7e5+yfq9wMuJcX2ujFxCgyXienkMpyvYMb8H7TXY02NDOxXiLSbxxDV95BkqO26pt5jyf9H/7Nu1PJb3+ex3uvSZE9vfZr8Ivx8JTVXFqt2miEnkpSlwowmQMBYghhxRPPJCc0WvM9byCX1iFzaHBHZLmqt63gWV1uF7ZoxMmqjhumb7EpVmapHNuEWVe38BQ="
 matrix:
   include:
     - name: "3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
@@ -19,4 +23,10 @@ matrix:
 install: 
   - pip install -r requirements.txt 
   - pip install -r requirements_dev.txt 
-script: pytest --cov=example
+script: 
+  - pytest --cov=example
+  - python -m pylint example || python3 -m pylint example
+  # - pdoc example --html --overwrite 
+  # - doctr deploy . --built-docs html
+after_success:
+  - coveralls

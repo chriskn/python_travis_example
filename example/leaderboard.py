@@ -1,27 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Dummy Class."""
 
-import pandas as pd
-import numpy as np
 import os
-import xlwt
 
+import numpy as np
+import pandas as pd
 
-results = pd.DataFrame([
+RESULTS = pd.DataFrame([
     ['tom', 3],
     ['nick', 5],
     ['juli', 19],
     ['tom', 8],
-    ['peter', 20]
 ], columns=['Name', 'Points'])
 
 
 def calculate_leaderboard(data):
-    leaderboard = data.groupby(['Name'], as_index=False).sum()
-    leaderboard.sort_values('Points', ascending=False, inplace=True)
-    leaderboard.index = np.arange(1, len(leaderboard)+1)
-    leaderboard.index.name = "Rank"
-    return leaderboard
+    """Caluclates Leaderboard"""
+    board = data.groupby(['Name'], as_index=False).sum()
+    board.sort_values('Points', ascending=False, inplace=True)
+    board.index = np.arange(1, len(board)+1)
+    board.index.name = "Rank"
+    return board
 
 
 def write_leaderboard(data, filepath, sheetname):
@@ -32,7 +32,9 @@ def write_leaderboard(data, filepath, sheetname):
 
 
 if __name__ == '__main__':
-    leaderboard = calculate_leaderboard(results)
-    output_path = os.path.join("results","leaderboard.xls")
+    # disable invalid name check
+    # pylint: disable = C0103
+    leaderboard = calculate_leaderboard(RESULTS)
+    output_path = os.path.join("results", "leaderboard.xls")
     write_leaderboard(leaderboard, output_path, "Leaderboard")
     print(leaderboard)
