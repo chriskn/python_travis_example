@@ -1,2 +1,7 @@
 pandas
 xlwt
+
+#Dev
+pytest
+pytest-cov
+pylint
