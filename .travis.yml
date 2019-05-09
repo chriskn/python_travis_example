@@ -5,23 +5,28 @@ cache: pip
 python:
 - 3.6 # default build environment
 - 3.5
-- 3.7
 
 # build script for default stage "test" 
 install: pip install -r requirements.txt 
 script: pytest 
 
 stages:
-  - name: test
-  - name: coverage
   - name: quality
+  - name: test
   - name: docs
     if: branch = master AND tag =~ /^Release.*$/
 
 jobs:
   include:
-    - stage: test
-      name: "Test with Python 3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
+    - name: "Test and coverage with Python 3.7.1 on Linux"
+      python: 3.7
+      install:
+        - pip install -r requirements.txt 
+        - pip install codecov 
+      env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
+      script: pytest --cov=example --cov-fail-under 60
+      after_success: codecov
+    - name: "Test with Python 3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
       os: osx  
       osx_image: xcode10.2 # macOS 10.14
       language: shell       
@@ -31,16 +36,9 @@ jobs:
       language: shell      
       before_install: choco install python # available packages https://chocolatey.org/packages?q=python
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-    - name: Measure coverage
-      python: 3.6
-      install:
-        - pip install -r requirements.txt 
-        - pip install codecov 
-      env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
-      script: pytest --cov=example --cov-fail-under 60
-      after_success: codecov
 
     - stage: quality
+      name: "Pylint"
       script: python -m pylint example 
 
     - stage: docs
