@@ -11,14 +11,14 @@ python:
 install: pip install -r requirements.txt 
 script: pytest 
 
-stages:
-  - test
-  - coverage
-  - quality
-  - docs
-    if: branch = master AND tag =~ /^Release.*$/
+#stages:
+#  - test
+#  - coverage
+#  - quality
+#  - docs
+#    if: branch = master AND tag =~ /^Release.*$/
+
   
-    
 jobs:
   include:
     - stage: "test"
@@ -48,5 +48,5 @@ jobs:
 
     - stage: "docs"
       install: pip install pdoc
-      script: pdoc example --html
+      script: pdoc example --html --overwrite
 
