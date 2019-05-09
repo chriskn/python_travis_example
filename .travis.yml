@@ -32,15 +32,13 @@ jobs:
       language: shell      
       before_install: choco install python # available packages https://chocolatey.org/packages?q=python
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-    
-    - stage: coverage
+    - stage: test
       install:
         - pip install -r requirements.txt 
         - pip install codecov 
       env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
-      script: 
-        - pytest --cov=example --cov-fail-under 60
-        - codecov
+      script: pytest --cov=example --cov-fail-under 60
+      allow_failures: script: codecov
 
     - stage: quality
       script: python -m pylint example 
