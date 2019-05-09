@@ -41,3 +41,10 @@ jobs:
     - stage: "docs"
       install: pip install pdoc
       script: pdoc example --html --overwrite
+
+stages:
+  - test
+  - coverage
+  - quality
+  - docs
+    if: branch = master AND tag =~ /^Release.*$/
