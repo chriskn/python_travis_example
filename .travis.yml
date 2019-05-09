@@ -43,7 +43,7 @@ jobs:
     - stage: quality
       script: python -m pylint example 
 
-    - stage: "docs"
+    - stage: docs
       install: pip install pdoc
       script: pdoc example --html --overwrite
 
