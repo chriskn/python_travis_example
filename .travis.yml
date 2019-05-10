@@ -24,7 +24,7 @@ jobs:
         - pip install -r requirements.txt 
         - pip install codecov 
       env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
-      script: pytest --cov=example --cov-fail-under 60
+      script: pytest --cov=example --cov-config=build/.coveragerc --cov-fail-under 60 # see https://pytest-cov.readthedocs.io/en/latest/
       after_success: codecov
     - name: "Test with Python 3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
       os: osx  
@@ -38,11 +38,14 @@ jobs:
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
     - stage: quality
-      name: "Pylint"
-      script: python -m pylint example 
+      name: "Pylint with Python 3.7.2 on Linux"
+      script: python -m pylint example --rcfile build/.pylintrc # see http://pylint.pycqa.org/en/latest/
 
     - stage: docs
       install: pip install pdoc
       script: pdoc example --html --overwrite
 
-
+notifications:
+  email:
+    on_success: change
+    on_failure: always
