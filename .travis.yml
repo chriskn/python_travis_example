@@ -2,6 +2,12 @@ language: python # works only for linux
 dist: xenial # needed for python 3.7
 cache: pip  
 
+addons:
+  sonarcloud:
+    organization: "chriskn" # the key of the org you chose at step #3
+    token:
+      secure: "JZoFw0ixId9DVFYlpa2go/2IgTgCQNjtRCgMQ1zVuQEQr3CQkXVmMySLumO72PMXcnhFt7m266VeCMwwEuybfAVgufuycFP9ONvkoRV1qJH1InE3HM9nb0Kl+4YOkFuVmXPtxBOeFsBwKefY+hOTUW8kxG7tU31GzKfkLyDspeu7EeslNw4tjv7GhxQHybr3G2CiVvaHJcGI5ySMo3rgonJDXCtL/ZHnwnegVwpkbU1A49P9cUFXfpuXmd1OJHaKI5jlkGiyQB1MDWI8YKx17V8eUJY1MUh8xgYQvd7nBvsDS839nHGlZZyDeiuT0lf2hPi+Q9GHTSjaI9ETIAbRZ0AfRLxdlMaq02ylJXlqqWbi9nlb3MpcgFsCs7Z69ZWanl8e2fLsuAwbqsGzsdm8aEhpAJupSpTYF0r51UuA9wVRiZfcXxl8yqCrYnwecO46RabKM1dT5Rty4J/Mv4JBD7APQvqRbAEdpQg/VL3n+uM+Qd4jvHsu/S9YCSCoJ5EQzBqTz4MDKE5wiRwexU6DTMkIyheDQB+XrKXOlwVOEIYCsz56z2LoQV85jCEOV5B3eeUVBTPvVIXw4B5wtOKLSDXk7I2uJymOppX9Igp58vtVpmXfGpuQHZevVXUzUHzUeunP5CtjkZ5kioqffQAxrX0XKJlI/B12X49eLKi7q2o="
+
 python:
 - 3.6 # default build environment
 - 3.5
@@ -18,11 +24,12 @@ stages:
 
 jobs:
   include:
-    - name: "Test and coverage with Python 3.6 on Linux"
+    - name: Test and coverage with Python 3.6 on Linux
       python: 3.7
       install:
         - pip install -r requirements.txt 
         - pip install codecov 
+        - sonar-scanner
       env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
       script: pytest --cov=example --cov-config=build/.coveragerc --cov-fail-under 60 # see https://pytest-cov.readthedocs.io/en/latest/
       after_success: codecov
@@ -38,7 +45,7 @@ jobs:
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
     - stage: quality
-      name: Static code analysis and check style with Python 3.6 on Linux
+      name: Analyse code and check style with Python 3.6 on Linux
       install: 
         - pip install black
         - pip install pylint
