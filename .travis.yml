@@ -18,7 +18,7 @@ stages:
 
 jobs:
   include:
-    - name: "Test and coverage with Python 3.7.1 on Linux"
+    - name: "Test and coverage with Python 3.6 on Linux"
       python: 3.7
       install:
         - pip install -r requirements.txt 
@@ -26,20 +26,26 @@ jobs:
       env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
       script: pytest --cov=example --cov-config=build/.coveragerc --cov-fail-under 60 # see https://pytest-cov.readthedocs.io/en/latest/
       after_success: codecov
-    - name: "Test with Python 3.7.2 on macOS" # see https://docs.travis-ci.com/user/reference/osx/
+    - name: Test with Python 3.7.2 on macOS # see https://docs.travis-ci.com/user/reference/osx/
       os: osx  
       osx_image: xcode10.2 # macOS 10.14
       language: shell       
       before_install: pip3 install --upgrade pip
-    - name: "Test with Python 3.7.3 on Windows" # see https://docs.travis-ci.com/user/reference/windows/
+    - name: Test with Python 3.7.3 on Windows # see https://docs.travis-ci.com/user/reference/windows/
       os: windows # Windows 10.0.17134 N/A Build 17134
       language: shell      
       before_install: choco install python # available packages https://chocolatey.org/packages?q=python
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
     - stage: quality
-      name: "Pylint with Python 3.7.2 on Linux"
-      script: python -m pylint example --rcfile build/.pylintrc # see http://pylint.pycqa.org/en/latest/
+      name: Static code analysis and check style with Python 3.6 on Linux
+      install: 
+        - pip install black
+        - pip install pylint
+        - pip install -r requirements.txt
+      script: 
+        - python -m pylint example --rcfile build/.pylintrc # see http://pylint.pycqa.org/en/latest/
+        - black example --diff --check # see https://github.com/python/black
 
     - stage: docs
       install: pip install pdoc
