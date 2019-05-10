@@ -1,62 +1,60 @@
-language: python # works only for linux
-dist: xenial # needed for python 3.7
-cache: pip  
-
-addons:
-  sonarcloud:
-    organization: "chriskn" # the key of the org you chose at step #3
-    token:
-      secure: "JZoFw0ixId9DVFYlpa2go/2IgTgCQNjtRCgMQ1zVuQEQr3CQkXVmMySLumO72PMXcnhFt7m266VeCMwwEuybfAVgufuycFP9ONvkoRV1qJH1InE3HM9nb0Kl+4YOkFuVmXPtxBOeFsBwKefY+hOTUW8kxG7tU31GzKfkLyDspeu7EeslNw4tjv7GhxQHybr3G2CiVvaHJcGI5ySMo3rgonJDXCtL/ZHnwnegVwpkbU1A49P9cUFXfpuXmd1OJHaKI5jlkGiyQB1MDWI8YKx17V8eUJY1MUh8xgYQvd7nBvsDS839nHGlZZyDeiuT0lf2hPi+Q9GHTSjaI9ETIAbRZ0AfRLxdlMaq02ylJXlqqWbi9nlb3MpcgFsCs7Z69ZWanl8e2fLsuAwbqsGzsdm8aEhpAJupSpTYF0r51UuA9wVRiZfcXxl8yqCrYnwecO46RabKM1dT5Rty4J/Mv4JBD7APQvqRbAEdpQg/VL3n+uM+Qd4jvHsu/S9YCSCoJ5EQzBqTz4MDKE5wiRwexU6DTMkIyheDQB+XrKXOlwVOEIYCsz56z2LoQV85jCEOV5B3eeUVBTPvVIXw4B5wtOKLSDXk7I2uJymOppX9Igp58vtVpmXfGpuQHZevVXUzUHzUeunP5CtjkZ5kioqffQAxrX0XKJlI/B12X49eLKi7q2o="
+language: python
+dist: xenial
+cache: pip
 
 python:
-- 3.6 # default build environment
+- 3.6
 - 3.5
 
-# build script for default stage "test" 
-install: pip install -r requirements.txt 
-script: pytest 
+install: pip install -r requirements.txt
+script: pytest
 
 stages:
-  - name: quality
-  - name: test
-  - name: docs
-    if: branch = master AND tag =~ /^Release.*$/
+- name: quality
+- name: test
+- name: docs
+  if: branch = master AND tag =~ /^Release.*$/
 
 jobs:
   include:
-    - name: Test and coverage with Python 3.6 on Linux
-      python: 3.7
-      install:
-        - pip install -r requirements.txt 
-        - pip install codecov 
-        - sonar-scanner
-      env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
-      script: pytest --cov=example --cov-config=build/.coveragerc --cov-fail-under 60 # see https://pytest-cov.readthedocs.io/en/latest/
-      after_success: codecov
-    - name: Test with Python 3.7.2 on macOS # see https://docs.travis-ci.com/user/reference/osx/
-      os: osx  
-      osx_image: xcode10.2 # macOS 10.14
-      language: shell       
-      before_install: pip3 install --upgrade pip
-    - name: Test with Python 3.7.3 on Windows # see https://docs.travis-ci.com/user/reference/windows/
-      os: windows # Windows 10.0.17134 N/A Build 17134
-      language: shell      
-      before_install: choco install python # available packages https://chocolatey.org/packages?q=python
-      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+  - name: Test and coverage with Python 3.7 on Linux
+    python: 3.7
+    install:
+    - pip install -r requirements.txt
+    - pip install codecov
+    env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
+    script: pytest --cov=example --cov-config=build/.coveragerc --cov-fail-under 60
+    after_success: codecov
+  - name: Test with Python 3.7.2 on macOS
+    os: osx
+    osx_image: xcode10.2
+    language: shell
+    before_install: pip3 install --upgrade pip
+  - name: Test with Python 3.7.3 on Windows
+    os: windows
+    language: shell
+    before_install: choco install python
+    env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+  
+  - stage: quality
+    name: Analyse code and check style with Python 3.6 on Linux
+    addons:
+      sonarcloud:
+        organization: "chriskn"
+        token:
+          secure: "5e7c897319dd115d419123b160392b2978786914"
+    install:
+    - pip install black
+    - pip install pylint
+    - pip install -r requirements.txt
+    script:
+    - python -m pylint example --rcfile build/.pylintrc
+    - black example --diff --check
+    - sonar-scanner -Dproject.settings=build/sonar-project.properties
 
-    - stage: quality
-      name: Analyse code and check style with Python 3.6 on Linux
-      install: 
-        - pip install black
-        - pip install pylint
-        - pip install -r requirements.txt
-      script: 
-        - python -m pylint example --rcfile build/.pylintrc # see http://pylint.pycqa.org/en/latest/
-        - black example --diff --check # see https://github.com/python/black
-
-    - stage: docs
-      install: pip install pdoc
-      script: pdoc example --html --overwrite
+  - stage: docs
+    install: pip install pdoc
+    script: pdoc example --html --overwrite
 
 notifications:
   email:
