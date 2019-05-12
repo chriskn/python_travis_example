@@ -25,14 +25,14 @@ class TestLeaderboard(unittest.TestCase):
     )
 
     def test_leaderboard_groups_by_name(self):
-        result = leaderboard.calculate_leaderboard(self.test_data)
+        result = leaderboard.calculate(self.test_data)
         self.assertEqual(set(result["Name"]), set(["tom", "nick", "juli", "peter"]))
 
     def test_leaderboard_sums_up_by_name(self):
-        result = leaderboard.calculate_leaderboard(self.test_data)
+        result = leaderboard.calculate(self.test_data)
         self.assertEqual(set(result["Points"]), set([13, 34, 40, 30]))
 
     def test_leaderboard_is_sorted_by_points(self):
-        result = leaderboard.calculate_leaderboard(self.test_data)
+        result = leaderboard.calculate(self.test_data)
         self.assertEqual(list(result["Name"]), ["peter", "juli", "nick", "tom"])
         self.assertEqual(list(result["Points"]), [40, 34, 30, 13])

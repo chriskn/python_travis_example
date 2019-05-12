@@ -5,7 +5,8 @@ jobs= 0 # auto-detect the number of processors available
 # message code: http://pylint-messages.wikidot.com/all-codes
 disable = 
       C0111, # Missing docstring
-      C0301  # Line too long
+      C0301, # Line too long
+      C0411 # Import order
 
 [FORMAT]
 max-module-lines = 300

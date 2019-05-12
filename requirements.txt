@@ -1,7 +1,8 @@
 pandas
+xlrd
 xlwt
 
-#Dev
+#Develop
 pytest
 pytest-cov
 pylint

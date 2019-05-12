@@ -1,4 +1,5 @@
 language: python
+fast_finish: true
 dist: xenial
 cache: pip
 
@@ -17,32 +18,37 @@ stages:
 
 jobs:
   include:
-  - name: Test and coverage with Python 3.7 on Linux
+  - name: Test and coverage using Python 3.7
     python: 3.7
     install:
-    - pip install -r requirements.txt
     - pip install codecov
+    - pip install -r requirements.txt
     env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
-    script: pytest --cov=example --cov-config=build/.coveragerc --cov-fail-under 60
-    after_success: codecov
-  - name: Test with Python 3.7.2 on macOS
+    script: 
+      - pytest -m "not integration" --cov=example --cov-config=build/.coveragerc --cov-fail-under 60
+      - pytest -m integration
+    after_success: codecov -F unittests
+  - name: Integration test using Python 3.7.2 on macOS
     os: osx
     osx_image: xcode10.2
     language: shell
     before_install: pip3 install --upgrade pip
-  - name: Test with Python 3.7.3 on Windows
+    script: pytest -v -m integration --cov=example --cov-config=build/.coveragerc --cov-fail-under 80
+    after_success: codecov -F integration
+  - name: Integration test using Python 3.7.3 on Windows
     os: windows
     language: shell
     before_install: choco install python
     env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-  
+    script: pytest -v -m integration
+
   - stage: quality
-    name: Analyse code and check style with Python 3.6 on Linux
+    name: Static code analysis and style checks 
     addons:
       sonarcloud:
         organization: "chriskn"
         token:
-          secure: "5e7c897319dd115d419123b160392b2978786914"
+          secure: "452a8d35b147b591523a3744a98fab6334d33cfc"
     install:
     - pip install black
     - pip install pylint
