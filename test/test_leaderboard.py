@@ -5,7 +5,7 @@ import unittest
 
 import pandas as pd
 
-from example import leaderboard
+from leaderboard import leaderboard
 
 
 class TestLeaderboard(unittest.TestCase):

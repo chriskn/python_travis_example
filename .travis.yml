@@ -25,7 +25,7 @@ jobs:
     - pip install -r requirements.txt
     env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
     script: 
-      - pytest -m "not integration" --cov=example --cov-config=build/.coveragerc --cov-fail-under 60
+      - pytest -m "not integration" --cov=leaderboard --cov-config=build/.coveragerc --cov-fail-under 60
       - pytest -m integration
     after_success: codecov -F unittests
   - name: Integration test using Python 3.7.2 on macOS
@@ -33,7 +33,7 @@ jobs:
     osx_image: xcode10.2
     language: shell
     before_install: pip3 install --upgrade pip
-    script: pytest -v -m integration --cov=example --cov-config=build/.coveragerc --cov-fail-under 80
+    script: pytest -v -m integration --cov=leaderboard --cov-config=build/.coveragerc --cov-fail-under 80
     after_success: codecov -F integration
   - name: Integration test using Python 3.7.3 on Windows
     os: windows
@@ -54,13 +54,13 @@ jobs:
     - pip install pylint
     - pip install -r requirements.txt
     script:
-    - python -m pylint example --rcfile build/.pylintrc
-    - black example --diff --check
-    - sonar-scanner -Dproject.settings=build/sonar-project.properties
+    - python -m pylint leaderboard --rcfile build/.pylintrc
+    - black leaderboard --diff --check
+    after_success: sonar-scanner -Dproject.settings=build/sonar-project.properties
 
   - stage: docs
     install: pip install pdoc
-    script: pdoc example --html --overwrite
+    script: pdoc leaderboard --html --overwrite
 
 notifications:
   email:

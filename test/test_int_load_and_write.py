@@ -6,7 +6,7 @@ import unittest
 
 import pandas as pd
 
-from example import leaderboard as sut
+from leaderboard import leaderboard as sut
 import pytest
 
 
