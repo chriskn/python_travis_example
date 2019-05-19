@@ -1,0 +1,21 @@
+import setuptools
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name="leaderboard",
+    version="0.1.1",
+    author="Christoph Knauf",
+    author_email= "knauf.christoph@gmail.com", 
+    description="Python CI/CD example",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/chriskn/python_travis_example",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+)
