@@ -11,10 +11,10 @@ install: pip install -r requirements.txt
 script: pytest
 
 stages:
-- name: deploy
 - name: quality
 - name: test
-  #if: branch = master AND tag =~ /^Release.*$/
+- name: deploy
+  if: branch = master AND tag =~ /^Release.*$/
 
 
 _def_windows_os: &windows_os
@@ -52,7 +52,7 @@ jobs:
       sonarcloud:
         organization: "chriskn"
         token:
-          secure: "452a8d35b147b591523a3744a98fab6334d33cfc"
+          secure: "hOR+N27wSzjBvp15ISCKOwTtG/uMNcuI/wvVDRtZvrqWEW2CCWcmUlDRqgTkKJFy5iftVlVlqviW2lgLCB1YJUrUteyx8ZGTYbCBSCNS6Dw7ws8BPZTy4gtiEQNq91jHBFISiPPyh3nrDkLQq9b1KWW1nnkD2fJMn5Lp9/RuZ/u7o2zd+weiUO9LSpip6SSf+FsshDt1y7hkyPWvt2z4g2GnwkvtG/I3nLVwCD/cXx6ZlHVDZK2J/DKySvUmZDtEIQSRzF3zAloGh3CE4kBYVrZjMmInxu7OZt5DHyqy6fbczKBv/8oy+BRRXU3BfuCFg8mk1bFjHpARhlNSztWlqUKTOPBLRpaVfvLIU+kSiyraH/1NHQsupgoIXr37xg6w7GLv+SiyIqx2l+OJ1IKa4oo3FXEwJufSj2n9sZksB1Mn/whNVg12UFdVQw7ukCYQJDrK1VdUQZwmXPJAo8bQhgGcMtWMNz95C+mfuaZU1KjRIOoXtJtFcOC2TAPnPddo/VjnvU2Bed0g3KpqIkYbk2om4d1kiyYv3pnppoRNySb8W+ETXoC6Dty+qSX44fA2g9aAhOlh0OlkJwiMIOzZHtmLE1y0kpe8kM4LoVdST5o21Ra2hQ4n5V4Ht1dJKbJXx5Xn4puiov1yLKCqztBvKzn2SObCUXFOWCxLCYR19PY="
     install:
     - pip install black
     - pip install pylint
