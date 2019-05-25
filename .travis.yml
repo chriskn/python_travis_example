@@ -10,19 +10,18 @@ python:
 install: pip install -r requirements.txt
 script: pytest
 
+_def_windows_os: &windows_os
+  os: windows
+  language: shell
+  before_install: choco install python
+  env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+
 stages:
 - name: quality
 - name: test
 - name: deploy
   if: branch = master AND tag =~ /^Release.*$/
 
-
-_def_windows_os: &windows_os
-  os: windows
-  language: shell
-  before_install: choco install python
-  env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-     
 jobs:
   include:
   - name: Test and coverage using Python 3.7
@@ -32,7 +31,7 @@ jobs:
     - pip install -r requirements.txt
     env: CODECOV_TOKEN="c54d90f6-f88b-4d81-a284-2c97f6c32161"
     script: 
-      - pytest -m "not integration" --cov=leaderboard --cov-config=build/.coveragerc --cov-fail-under 60
+      - pytest -m "not integration" --cov=leaderboard --cov-config=conf/.coveragerc --cov-fail-under 60
       - pytest -m integration
     after_success: codecov -F unittests
   - name: Integration test using Python 3.7.2 on macOS
@@ -40,7 +39,7 @@ jobs:
     osx_image: xcode10.2
     language: shell
     before_install: pip3 install --upgrade pip
-    script: pytest -v -m integration --cov=leaderboard --cov-config=build/.coveragerc --cov-fail-under 80
+    script: pytest -v -m integration --cov=leaderboard --cov-config=conf/.coveragerc --cov-fail-under 80
     after_success: codecov -F integration
   - <<: *windows_os
     name: Integration test using Python 3.7.3 on Windows
@@ -58,9 +57,9 @@ jobs:
     - pip install pylint
     - pip install -r requirements.txt
     script:
-    - python -m pylint leaderboard --rcfile build/.pylintrc
+    - python -m pylint leaderboard --rcfile conf/.pylintrc
     - black leaderboard --diff --check
-    after_success: sonar-scanner -Dproject.settings=build/sonar-project.properties
+    after_success: sonar-scanner -Dproject.settings=conf/sonar-project.properties
 
   - stage: deploy
     name: Deploy to pypi
@@ -70,15 +69,19 @@ jobs:
       provider: pypi
       server: https://test.pypi.org/legacy/
       user: chriskn
+      skip_existing: true
       password: 
         secure: "es1fhT9tD9HMwSnns4PkYyUmQu40NqzXTo0gvde1/lhFKXtPo36JG9ktyoyjaMLDEuIdPcqv/uU1yvC0N7ThqipEBBTKqIF1L53OWDnMo017v1oxqsq/NNAusPybRdjx/vByRCqgh4E77NZFHRDJPXPTNYa/WuGUVd6iZhWzCi6THFqMvlhxKZjletgOj+h57kY0YrMYWH4FE1YVewDjwXWKs4qTl69btyq4HHT/uADm2di5xo9smadoK7jCW28WhoxYi9kI90o0J2WcU6/WMKtlLq6xvxH/bQX+9Hmf4M9y3fDWUZnN4aDUcgcMqvt1JyEWKyBSD3xrNTLyVydL4bCTFr2lmXjka85rxrY2XZMAxYyB0afb6sM4G8h+akzJoUJONPdjlPgMX64tsIlntdkFczUBQZJIpAQUdD9EBUsS4oYP379eKa/Mgrrv2ZfLe6zEFaPTG+gikYqziYAJMWpZAsA0akHyPAYCoQbwSwDh38EzTviDmq9V+/fhtSfYUAO1YwiFsK6okUZbmZebhXfylOau1WCINA0tWQiPqeR5Ma05CYlNNFvtbEHYgn7LZK/U+nwAux8twQy/NtAKy0mwXDEETyk4wLM5floSgxx1bQJ3T6dobrITY+W984KhFRzZD73R6xT+g48xFSFLO71MDa22kjMxjumMH4OxlPE="
-      skip_existing: true
-      skip_cleanup: true
-  - name: Deploy exe to GitHub pages
+  - name: Build exe and deploy to GitHub pages
     <<: *windows_os
     install: pip install pyinstaller
-    script: pyinstaller leaderboard/leaderboard.py --onefile
-
+    script: pyinstaller leaderboard/leaderboard.py --onefile --name leaderboard_$TRAVIS_TAG
+    #deploy: 
+      #provider: pages
+      #skip_cleanup: true
+      #keep_history: true
+      #local_dir: dist
+      #github_token: "$GIT_DEPLOY_KEY"
   
 notifications:
   email:
