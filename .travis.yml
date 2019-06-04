@@ -17,7 +17,7 @@ _def_windows_os: &windows_os
   env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
 stages:
-- name: quality
+- name: static code analysis
 - name: test
 - name: deploy
   if: branch = master AND tag =~ /^Release.*$/
@@ -45,8 +45,8 @@ jobs:
     name: Integration test using Python 3.7.3 on Windows
     script: pytest -v -m integration
 
-  - stage: quality
-    name: Static code analysis and style checks 
+  - stage: static code analysis
+    name: style checks and linting 
     addons:
       sonarcloud:
         organization: "chriskn"
