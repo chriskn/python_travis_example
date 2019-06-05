@@ -2,6 +2,7 @@
 # Ignore invalid names
 # pylint: disable = C0103
 import setuptools
+
 with open("README.rst", "r") as fh:
     long_description = fh.read()
 
