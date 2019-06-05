@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
@@ -11,7 +10,6 @@ import pytest
 
 
 class TestLLoadAndWrite(unittest.TestCase):
-
     test_data = pd.DataFrame(
         [
             ["tom", 10],

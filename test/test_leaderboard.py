@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import unittest
@@ -9,7 +8,6 @@ from leaderboard import leaderboard
 
 
 class TestLeaderboard(unittest.TestCase):
-
     test_data = pd.DataFrame(
         [
             ["tom", 10],

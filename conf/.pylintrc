@@ -6,8 +6,8 @@ jobs= 0 # auto-detect the number of processors available
 disable = 
       C0111, # Missing docstring
       C0301, # Line too long
-      C0411 # Import order
-
+      C0411, E0401 # Imports
+	  
 [FORMAT]
 max-module-lines = 300
 
