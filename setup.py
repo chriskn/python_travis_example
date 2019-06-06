@@ -8,7 +8,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="leaderboard",
-    version="0.1.2",
+    version="0.1.4",
     author="Christoph Knauf",
     author_email="knauf.christoph@gmail.com",
     description="Python CI/CD example",

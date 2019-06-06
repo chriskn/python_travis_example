@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Calculates a leaderboard from results."""
+"""Calculates and writes leaderboard from results."""
 
 import os
+
 
 import numpy as np
 import pandas as pd
