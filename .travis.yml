@@ -17,9 +17,9 @@ _def_windows_os: &windows_os
   env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
 stages:
-- name: static code analysis
+- name: quality
 - name: test
-- name: deploy
+- name: release
   if: branch = master AND tag =~ /^Release.*$/
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
     name: Integration test using Python 3.7.3 on Windows
     script: pytest -v -m integration
 
-  - stage: static code analysis
+  - stage: quality
     name: style checks and linting 
     addons:
       sonarcloud:
@@ -61,8 +61,8 @@ jobs:
     - black leaderboard --diff --check
     after_success: sonar-scanner -Dproject.settings=conf/sonar-project.properties
 
-  - stage: deploy
-    name: Deploy to pypi
+  - stage: release
+    name: release
     install: pip install pdoc
     script: pdoc leaderboard --html --overwrite
     deploy:
@@ -72,16 +72,6 @@ jobs:
       skip_existing: true
       password: 
         secure: "es1fhT9tD9HMwSnns4PkYyUmQu40NqzXTo0gvde1/lhFKXtPo36JG9ktyoyjaMLDEuIdPcqv/uU1yvC0N7ThqipEBBTKqIF1L53OWDnMo017v1oxqsq/NNAusPybRdjx/vByRCqgh4E77NZFHRDJPXPTNYa/WuGUVd6iZhWzCi6THFqMvlhxKZjletgOj+h57kY0YrMYWH4FE1YVewDjwXWKs4qTl69btyq4HHT/uADm2di5xo9smadoK7jCW28WhoxYi9kI90o0J2WcU6/WMKtlLq6xvxH/bQX+9Hmf4M9y3fDWUZnN4aDUcgcMqvt1JyEWKyBSD3xrNTLyVydL4bCTFr2lmXjka85rxrY2XZMAxYyB0afb6sM4G8h+akzJoUJONPdjlPgMX64tsIlntdkFczUBQZJIpAQUdD9EBUsS4oYP379eKa/Mgrrv2ZfLe6zEFaPTG+gikYqziYAJMWpZAsA0akHyPAYCoQbwSwDh38EzTviDmq9V+/fhtSfYUAO1YwiFsK6okUZbmZebhXfylOau1WCINA0tWQiPqeR5Ma05CYlNNFvtbEHYgn7LZK/U+nwAux8twQy/NtAKy0mwXDEETyk4wLM5floSgxx1bQJ3T6dobrITY+W984KhFRzZD73R6xT+g48xFSFLO71MDa22kjMxjumMH4OxlPE="
-  #- name: Build exe and deploy to GitHub pages
-  #  <<: *windows_os
-  #  install: pip install pyinstaller
-  #  script: pyinstaller leaderboard/leaderboard.py --onefile --name leaderboard_$TRAVIS_TAG
-    #deploy: 
-      #provider: pages
-      #skip_cleanup: true
-      #keep_history: true
-      #local_dir: dist
-      #github_token: "$GIT_DEPLOY_KEY"
   
 notifications:
   email:
