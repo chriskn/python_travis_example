@@ -19,7 +19,7 @@ def calculate(data):
     data: Pandas dataframe
         columns: ["Name", "Points"]
     return: leaderboard
-        columns: ["Rank", "Name", "Points"]
+         columns: ["Rank", "Name", "Points"]
     """
     board = data.groupby(["Name"], as_index=False).sum()
     board.sort_values("Points", ascending=False, inplace=True)
